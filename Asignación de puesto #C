@@ -1,0 +1,87 @@
+using System;
+using System.Collections.Generic;
+
+namespace ParqueDiversiones
+{
+    // Clase Persona representa a cada visitante
+    class Persona
+    {
+        public string Nombre { get; set; }
+        public int NumeroAsiento { get; set; }
+
+        public Persona(string nombre)
+        {
+            Nombre = nombre;
+        }
+    }
+
+    // Clase Atraccion gestiona la cola y asignación de asientos
+    class Atraccion
+    {
+        private Queue<Persona> cola = new Queue<Persona>();
+        private List<Persona> sentados = new List<Persona>();
+        private const int MAX_ASIENTOS = 30;
+        private int asientoActual = 1;
+
+        public void AgregarPersona(string nombre)
+        {
+            if (sentados.Count < MAX_ASIENTOS)
+            {
+                cola.Enqueue(new Persona(nombre));
+            }
+            else
+            {
+                Console.WriteLine($"No hay asientos disponibles para {nombre}");
+            }
+        }
+
+        public void AsignarAsientos()
+        {
+            while (cola.Count > 0 && sentados.Count < MAX_ASIENTOS)
+            {
+                Persona p = cola.Dequeue();
+                p.NumeroAsiento = asientoActual++;
+                sentados.Add(p);
+                Console.WriteLine($"{p.Nombre} asignado al asiento #{p.NumeroAsiento}");
+            }
+        }
+
+        public void MostrarReporte()
+        {
+            Console.WriteLine("\n🪑 Reporte de Asientos Asignados:");
+            foreach (var p in sentados)
+            {
+                Console.WriteLine($"Asiento #{p.NumeroAsiento} → {p.Nombre}");
+            }
+        }
+    }
+
+    // Clase principal del programa
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Atraccion atraccion = new Atraccion();
+
+            string[] visitantes = {
+                "Ana", "Luis", "Carlos", "María", "Pedro", "Lucía", "Jorge", "Diana", "Marco", "Sofía",
+                "Julia", "Andrés", "Laura", "Mateo", "Camila", "Daniel", "Valeria", "Sebastián", "Paula", "Gabriel",
+                "Isabel", "Emilio", "Renata", "Nicolás", "Sara", "Tomás", "Elena", "Iván", "Patricia", "Samuel",
+                "ExtraPersona"
+            };
+
+            // Agregar personas a la cola
+            foreach (var nombre in visitantes)
+            {
+                atraccion.AgregarPersona(nombre);
+            }
+
+            // Asignar asientos y mostrar el resultado
+            atraccion.AsignarAsientos();
+            atraccion.MostrarReporte();
+
+            Console.WriteLine("\n🎢 ¡Simulación completada!");
+            Console.ReadKey();
+        }
+    }
+}
